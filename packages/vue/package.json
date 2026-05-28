@@ -1,0 +1,52 @@
+{
+  "name": "@page-composer/vue",
+  "version": "0.1.0",
+  "description": "Vue editor and renderer for Page Composer: PageComposer authoring surface and ComposedPage runtime.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Moheeb Zara <hackbuildvideo@gmail.com>",
+  "homepage": "https://github.com/virgilvox/vue-page-composer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virgilvox/vue-page-composer.git",
+    "directory": "packages/vue"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/page-composer.css"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@page-composer/core": "workspace:^"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/test-utils": "^2.4.10",
+    "happy-dom": "^20.9.0",
+    "vue": "^3.5.35",
+    "vue-tsc": "^3.3.2"
+  }
+}

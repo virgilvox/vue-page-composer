@@ -1,0 +1,91 @@
+/*
+ * Page Composer design tokens. Single source of truth for color, type,
+ * spacing, radius, shadow, and motion. Components consume these through
+ * var(--pc-*) and never hardcode values. Swap a token to retheme.
+ *
+ * Scoped to the .pc-scope class (applied to the editor root and the renderer
+ * root) so nothing leaks into the host's global styles.
+ */
+
+.pc-scope {
+  /* ink scale, editor chrome surfaces */
+  --pc-ink-900: #15120d;
+  --pc-ink-850: #1b1711;
+  --pc-ink-800: #211c15;
+  --pc-ink-750: #28221a;
+  --pc-ink-700: #322b21;
+
+  --pc-line: rgba(237, 230, 219, 0.08);
+  --pc-line-2: rgba(237, 230, 219, 0.14);
+
+  /* foreground */
+  --pc-fg: #ede6db;
+  --pc-fg-dim: #a89e8e;
+  --pc-fg-faint: #766c5c;
+
+  /* accent, amber */
+  --pc-accent: #e0a049;
+  --pc-accent-2: #f0b865;
+  --pc-accent-ink: #3a2a0e;
+  --pc-accent-soft: rgba(224, 160, 73, 0.14);
+
+  /* data, teal: bound fields and data-driven blocks */
+  --pc-data: #54bdb6;
+  --pc-data-soft: rgba(84, 189, 182, 0.14);
+
+  /* danger, coral */
+  --pc-danger: #e07a5f;
+
+  /* canvas + paper, the rendered page surfaces */
+  --pc-canvas: #efe9df;
+  --pc-paper: #ffffff;
+  --pc-paper-ink: #2a2620;
+  --pc-paper-dim: #6f685c;
+  --pc-paper-line: #e7e0d3;
+
+  /* radius */
+  --pc-radius: 9px;
+  --pc-radius-sm: 6px;
+
+  /* shadow */
+  --pc-shadow-pop: 0 16px 40px -12px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --pc-shadow-device: 0 30px 70px -28px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.4);
+
+  /* spacing scale */
+  --pc-space-1: 4px;
+  --pc-space-2: 7px;
+  --pc-space-3: 10px;
+  --pc-space-4: 14px;
+  --pc-space-5: 18px;
+  --pc-space-6: 24px;
+
+  /* type */
+  --pc-font-display: 'Bricolage Grotesque', 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --pc-font-body: 'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --pc-font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --pc-text-xs: 10px;
+  --pc-text-sm: 11.5px;
+  --pc-text-base: 13px;
+
+  /* motion */
+  --pc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --pc-dur: 0.15s;
+}
+
+/*
+ * Light theme override. Apply .pc-theme-light alongside .pc-scope to flip the
+ * editor chrome to a light palette by swapping token values only. Components
+ * stay untouched.
+ */
+.pc-scope.pc-theme-light {
+  --pc-ink-900: #faf6ee;
+  --pc-ink-850: #f3ede1;
+  --pc-ink-800: #ece4d4;
+  --pc-ink-750: #e4dac8;
+  --pc-ink-700: #d8ccb6;
+  --pc-line: rgba(40, 34, 26, 0.08);
+  --pc-line-2: rgba(40, 34, 26, 0.16);
+  --pc-fg: #211c15;
+  --pc-fg-dim: #5b5446;
+  --pc-fg-faint: #8a8170;
+}
