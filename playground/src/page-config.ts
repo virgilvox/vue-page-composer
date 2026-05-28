@@ -37,6 +37,7 @@ export const config = definePageConfig({
       icon: 'grid',
       render: Grid,
       zones: ['items'],
+      accepts: { items: ['Card'] },
       fields: {
         cols: { type: 'number', label: 'Columns', default: 3, min: 1, max: 6 },
         gap: { type: 'number', label: 'Gap', unit: 'px', default: 18, min: 0, max: 64 },
@@ -133,6 +134,7 @@ export const config = definePageConfig({
       icon: 'repeater',
       render: Repeater,
       zones: ['item'],
+      accepts: { item: ['Card'] },
       // Render the `item` zone once per record in the bound `source` list.
       repeat: { zone: 'item', source: 'source' },
       fields: {
