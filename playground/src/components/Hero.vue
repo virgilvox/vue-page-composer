@@ -6,6 +6,7 @@ withDefaults(
     subtitle?: string
     primaryLabel?: string
     secondaryLabel?: string
+    badges?: string[]
   }>(),
   {
     eyebrow: '',
@@ -13,6 +14,7 @@ withDefaults(
     subtitle: '',
     primaryLabel: 'Get started',
     secondaryLabel: 'Learn more',
+    badges: () => [],
   },
 )
 </script>
@@ -25,6 +27,9 @@ withDefaults(
     <div class="cta">
       <a v-if="primaryLabel" class="btn primary">{{ primaryLabel }}</a>
       <a v-if="secondaryLabel" class="btn secondary">{{ secondaryLabel }}</a>
+    </div>
+    <div v-if="badges.length" class="badges">
+      <span v-for="(badge, i) in badges" :key="i" class="badge">{{ badge }}</span>
     </div>
   </section>
 </template>
@@ -81,5 +86,21 @@ h1 {
   background: #fff;
   color: #23201a;
   border: 1px solid #e7e0d3;
+}
+.badges {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #b07c1f;
+  background: rgba(224, 160, 73, 0.12);
+  border: 1px solid rgba(224, 160, 73, 0.25);
+  border-radius: 20px;
+  padding: 3px 11px;
 }
 </style>

@@ -6,7 +6,7 @@ export const initialDoc: ComposedDocument = {
   version: '1',
   root: 'page',
   nodes: {
-    page: { type: 'Root', zones: { main: ['n_hero', 'n_grid'] } },
+    page: { type: 'Root', zones: { main: ['n_hero', 'n_grid', 'n_rep'] } },
     n_hero: {
       type: 'Hero',
       props: {
@@ -15,6 +15,7 @@ export const initialDoc: ComposedDocument = {
         subtitle: 'Drag your registered Vue components onto the canvas. Save a portable tree.',
         primaryLabel: 'Get started',
         secondaryLabel: 'Read the docs',
+        badges: ['Vue 3.5', 'Nuxt module', 'Portable JSON'],
       },
     },
     n_grid: {
@@ -52,11 +53,36 @@ export const initialDoc: ComposedDocument = {
         accent: '#e07a5f',
       },
     },
+    n_rep: {
+      type: 'Repeater',
+      props: { source: { $bind: 'features' }, cols: 3 },
+      zones: { item: ['tpl_card'] },
+    },
+    tpl_card: {
+      type: 'Card',
+      props: {
+        title: { $bind: 'item.title' },
+        body: { $bind: 'item.body' },
+        icon: 'globe',
+        variant: 'filled',
+        padding: 22,
+        accent: '#54bdb6',
+      },
+    },
   },
-  data: { feature: { $source: 'collection:features' } },
+  data: {
+    feature: { $source: 'collection:features' },
+    features: { $source: 'collection:features' },
+  },
 }
 
-// Sample data the resolver reads against in preview mode.
+// Sample data the resolver reads against in preview mode. The Repeater clones
+// its template card once per record in `features`.
 export const sampleData: Record<string, unknown> = {
   feature: { title: 'Realtime by default' },
+  features: [
+    { title: 'Realtime', body: 'Bound props update live as data changes.' },
+    { title: 'Portable', body: 'The document is plain JSON you own.' },
+    { title: 'Composable', body: 'Author with the components you already ship.' },
+  ],
 }

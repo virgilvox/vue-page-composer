@@ -3,6 +3,10 @@ import { ref } from 'vue'
 import { PageComposer, ComposedPage, serialize, type ComposedDocument } from '@page-composer/vue'
 import { config } from './page-config'
 import { initialDoc, sampleData } from './initial-doc'
+import IconField from './components/IconField.vue'
+
+// Custom inspector field types, keyed by the field's `component` name.
+const fieldComponents = { iconPicker: IconField }
 
 const doc = ref<ComposedDocument>(initialDoc)
 const mode = ref<'edit' | 'preview'>('edit')
@@ -19,8 +23,9 @@ function onPublish(next: ComposedDocument): void {
     v-if="mode === 'edit'"
     v-model="doc"
     :config="config"
+    :field-components="fieldComponents"
     route="/"
-    version="0.1"
+    version="0.3"
     doc-name="home.page.json"
     @preview="mode = 'preview'"
     @publish="onPublish"

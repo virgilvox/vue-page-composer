@@ -6,11 +6,13 @@ import Section from './components/Section.vue'
 import Heading from './components/Heading.vue'
 import TextBlock from './components/TextBlock.vue'
 import ActionButton from './components/ActionButton.vue'
+import Repeater from './components/Repeater.vue'
 
 export const config = definePageConfig({
   categories: {
     layout: { title: 'Layout', order: 0 },
     content: { title: 'Content', order: 1 },
+    data: { title: 'Data', order: 2 },
   },
   components: {
     Section: {
@@ -52,6 +54,12 @@ export const config = definePageConfig({
         subtitle: { type: 'textarea', label: 'Subtitle', bindable: true },
         primaryLabel: { type: 'text', label: 'Primary button' },
         secondaryLabel: { type: 'text', label: 'Secondary button' },
+        badges: {
+          type: 'array',
+          label: 'Badges',
+          of: { type: 'text' },
+          description: 'Small pills shown under the buttons.',
+        },
       },
       defaultProps: {
         eyebrow: 'Open source · MIT',
@@ -90,6 +98,7 @@ export const config = definePageConfig({
       fields: {
         title: { type: 'text', label: 'Title', bindable: true },
         body: { type: 'textarea', label: 'Body', bindable: true },
+        icon: { type: 'custom', label: 'Icon', component: 'iconPicker' },
         variant: {
           type: 'segment',
           label: 'Variant',
@@ -100,7 +109,7 @@ export const config = definePageConfig({
         padding: { type: 'number', label: 'Padding', unit: 'px', default: 22 },
         accent: { type: 'color', label: 'Accent', default: '#e0a049' },
       },
-      defaultProps: { variant: 'bordered', padding: 22, accent: '#e0a049' },
+      defaultProps: { variant: 'bordered', padding: 22, accent: '#e0a049', icon: 'zap' },
     },
     Button: {
       label: 'Button',
@@ -117,6 +126,25 @@ export const config = definePageConfig({
         },
       },
       defaultProps: { label: 'Get started', variant: 'primary' },
+    },
+    Repeater: {
+      label: 'Repeater',
+      category: 'data',
+      icon: 'repeater',
+      render: Repeater,
+      zones: ['item'],
+      // Render the `item` zone once per record in the bound `source` list.
+      repeat: { zone: 'item', source: 'source' },
+      fields: {
+        source: {
+          type: 'text',
+          label: 'Data source',
+          bindable: true,
+          description: 'Bind to a list in your data, for example features.',
+        },
+        cols: { type: 'number', label: 'Columns', default: 3, min: 1, max: 6 },
+      },
+      defaultProps: { cols: 3 },
     },
   },
 })
