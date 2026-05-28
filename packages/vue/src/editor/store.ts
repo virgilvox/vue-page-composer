@@ -9,6 +9,8 @@ import type { EditorApi } from './useEditor.js'
 export interface EditorStore extends EditorApi {
   config: Config<Component>
   doc: ComputedRef<ComposedDocument>
+  /** Host-registered components for custom field types, keyed by name. */
+  fieldComponents: Record<string, Component>
 }
 
 export const editorStoreKey: InjectionKey<EditorStore> = Symbol('pc-editor-store')

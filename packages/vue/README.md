@@ -71,7 +71,7 @@ const doc = ref<ComposedDocument>(/* load from your store */)
 
 ## Field types
 
-`text`, `textarea`, `number`, `boolean`, `select`, `segment`, `color`. Mark a field `bindable: true` to expose the binding toggle.
+`text`, `textarea`, `number`, `boolean`, `select`, `segment`, `color`, nested `object` and `array` (add, remove, reorder), and `custom` for host-registered inspector components. Mark a scalar field `bindable: true` to expose the binding toggle. Repeaters (`repeat: { zone, source }`) clone a zone's template once per record in a bound list.
 
 ## Theming
 

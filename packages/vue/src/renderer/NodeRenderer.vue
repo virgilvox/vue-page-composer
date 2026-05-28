@@ -48,6 +48,21 @@ function childIds(zone: string): string[] {
   return node.value?.zones?.[zone] ?? []
 }
 
+// Repeater support. In production the template zone is rendered once per item
+// in the resolved list; in the editor it renders once so it stays editable.
+const repeat = computed(() => componentConfig.value?.repeat)
+const repeatList = computed<unknown[]>(() => {
+  const config = repeat.value
+  if (!config) return []
+  const value = resolvedProps.value[config.source]
+  return Array.isArray(value) ? value : []
+})
+function scopeFor(item: unknown): Record<string, unknown> {
+  return typeof item === 'object' && item !== null
+    ? (item as Record<string, unknown>)
+    : { value: item }
+}
+
 const selected = computed(() => bridge?.selectedId.value === props.id)
 const hovered = computed(() => bridge?.hoveredId.value === props.id)
 </script>
@@ -149,7 +164,23 @@ const hovered = computed(() => bridge?.hoveredId.value === props.id)
   <!-- Production: bare host component, no wrapper. -->
   <component :is="componentConfig.render" v-else v-bind="resolvedProps">
     <template v-for="zone in zoneNames" :key="zone" #[zone]>
-      <NodeRenderer v-for="childId in childIds(zone)" :key="childId" :id="childId" :scope="scope" />
+      <template v-if="repeat && zone === repeat.zone">
+        <template v-for="(item, i) in repeatList" :key="i">
+          <NodeRenderer
+            v-for="childId in childIds(zone)"
+            :key="`${childId}#${i}`"
+            :id="childId"
+            :scope="scopeFor(item)"
+          />
+        </template>
+      </template>
+      <NodeRenderer
+        v-for="childId in childIds(zone)"
+        v-else
+        :key="childId"
+        :id="childId"
+        :scope="scope"
+      />
     </template>
   </component>
 </template>

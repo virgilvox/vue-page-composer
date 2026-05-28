@@ -23,8 +23,10 @@ const props = withDefaults(
     route?: string
     version?: string
     docName?: string
+    /** Components for custom field types, keyed by the field's `component` name. */
+    fieldComponents?: Record<string, Component>
   }>(),
-  { route: '/', version: '0.1', docName: 'page.json' },
+  { route: '/', version: '0.1', docName: 'page.json', fieldComponents: () => ({}) },
 )
 
 const emit = defineEmits<{
@@ -45,7 +47,12 @@ function emitDoc(next: ComposedDocument): void {
 
 const editor = useEditor({ config: props.config, doc, emit: emitDoc })
 
-provide(editorStoreKey, { ...editor, config: props.config, doc })
+provide(editorStoreKey, {
+  ...editor,
+  config: props.config,
+  doc,
+  fieldComponents: props.fieldComponents,
+})
 provide(editorBridgeKey, editor.bridge)
 
 const viewport = ref<'desktop' | 'tablet' | 'mobile'>('desktop')
