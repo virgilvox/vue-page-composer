@@ -41,6 +41,21 @@ Grid: { label: 'Grid', render: Grid, zones: ['items'] }
 
 Drag and drop targets zones, not raw DOM positions, which keeps nesting rules explicit. The document root has its own zones, `['main']` by default, configurable with `rootZones`.
 
+### Restricting what a zone accepts
+
+`accepts` is a per-zone allow-list of component types. A zone with no entry accepts any type.
+
+```ts
+Grid: {
+  label: 'Grid',
+  render: Grid,
+  zones: ['items'],
+  accepts: { items: ['Card'] }, // only Cards may drop into items
+}
+```
+
+The editor enforces this: a drop into a zone that rejects the dragged type shows the no-drop cursor and is refused, and click-to-add falls back to the root when the selected container will not take the type.
+
 ## Field types
 
 The inspector form is generated from `fields`. Every field has an optional `label`, `description`, and `bindable` flag. Field-specific options follow.
