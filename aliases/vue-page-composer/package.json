@@ -1,0 +1,53 @@
+{
+  "name": "vue-page-composer",
+  "version": "0.1.0",
+  "description": "Visual page editor and renderer for Vue. Register the components you already ship, compose pages on a canvas, and save a portable JSON document that renders on any route. Friendly alias for @page-composer/vue.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Moheeb Zara <hackbuildvideo@gmail.com>",
+  "homepage": "https://github.com/virgilvox/vue-page-composer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virgilvox/vue-page-composer.git",
+    "directory": "aliases/vue-page-composer"
+  },
+  "bugs": {
+    "url": "https://github.com/virgilvox/vue-page-composer/issues"
+  },
+  "keywords": [
+    "vue",
+    "nuxt",
+    "page-builder",
+    "page-composer",
+    "visual-editor",
+    "drag-and-drop",
+    "cms",
+    "puck",
+    "no-code",
+    "page-editor"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@page-composer/vue": "workspace:^"
+  }
+}

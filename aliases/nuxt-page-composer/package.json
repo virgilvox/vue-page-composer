@@ -1,0 +1,44 @@
+{
+  "name": "nuxt-page-composer",
+  "version": "0.0.1",
+  "description": "Nuxt module for Page Composer. Auto-registers the renderer, provides composables, handles SSR and hydration, and offers an optional route loader that maps a path to a stored page document.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Moheeb Zara <hackbuildvideo@gmail.com>",
+  "homepage": "https://github.com/virgilvox/vue-page-composer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virgilvox/vue-page-composer.git",
+    "directory": "aliases/nuxt-page-composer"
+  },
+  "bugs": {
+    "url": "https://github.com/virgilvox/vue-page-composer/issues"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "vue",
+    "page-builder",
+    "page-composer",
+    "visual-editor",
+    "cms",
+    "ssr"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
