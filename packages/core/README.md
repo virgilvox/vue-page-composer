@@ -5,7 +5,7 @@ Framework-neutral core for [Page Composer](https://github.com/virgilvox/vue-page
 ## What is inside
 
 - Document model: a flat map of nodes keyed by id, plus a root id and optional data sources.
-- Mutations: `insertNode`, `moveNode`, `removeNode`, `duplicateNode`, `setProp`, `setBinding`, `clearBinding`. Each is pure and returns a new document.
+- Mutations: `insertNode`, `moveNode`, `removeNode`, `duplicateNode`, `extractSubtree`, `insertSubtree`, `setProp`, `setBinding`, `clearBinding`. Each is pure and returns a new document. `extractSubtree` and `insertSubtree` are the copy and paste primitives, and work across documents.
 - Traversal: `findParent`, `collectSubtree`, `walk`, `cloneSubtree`, and friends.
 - History: an undo and redo stack over document snapshots.
 - Serialization: `serialize`, `deserialize`, and `validateDocument` with collected, path-tagged errors.

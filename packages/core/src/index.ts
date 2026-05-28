@@ -57,12 +57,14 @@ export {
   moveNode,
   removeNode,
   duplicateNode,
+  extractSubtree,
+  insertSubtree,
   setProp,
   removeProp,
   setBinding,
   clearBinding,
 } from './mutations.js'
-export type { DropTarget, NewNode } from './mutations.js'
+export type { DropTarget, NewNode, Subtree } from './mutations.js'
 
 export { History } from './history.js'
 export type { HistoryOptions } from './history.js'

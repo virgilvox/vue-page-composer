@@ -32,6 +32,15 @@ export interface NewNode {
   zones?: string[]
 }
 
+/**
+ * A standalone document fragment: a root id plus the nodes under it, detached
+ * from any document. Used as the clipboard payload for copy and paste.
+ */
+export interface Subtree {
+  root: string
+  nodes: Record<string, PageNode>
+}
+
 /** Insert a fresh node into a zone. Returns the new document and the new id. */
 export function insertNode(
   doc: ComposedDocument,
@@ -125,6 +134,61 @@ export function duplicateNode(
   if (children) children.splice(location.index + 1, 0, rootId)
 
   return { doc: next, id: rootId }
+}
+
+/**
+ * Snapshot a node and its subtree into a detached fragment. The fragment keeps
+ * the original ids; `insertSubtree` reassigns fresh ones when grafting it back.
+ * This is the copy half of copy and paste.
+ */
+export function extractSubtree(doc: ComposedDocument, id: string): Subtree {
+  const nodes: Record<string, PageNode> = {}
+  for (const nodeId of collectSubtree(doc, id)) {
+    const node = doc.nodes[nodeId]
+    if (node) nodes[nodeId] = deepClone(node)
+  }
+  return { root: id, nodes }
+}
+
+/**
+ * Graft a fragment into a document at a target zone, assigning fresh ids to
+ * every node so it never collides with what is already there. This is the
+ * paste half, and it works across documents. Returns the new root id.
+ */
+export function insertSubtree(
+  doc: ComposedDocument,
+  fragment: Subtree,
+  target: DropTarget,
+): { doc: ComposedDocument; id: string } {
+  const next = cloneDoc(doc)
+  const parent = next.nodes[target.parentId]
+  if (!parent) throw new Error(`insertSubtree: parent "${target.parentId}" not found`)
+
+  const idMap = new Map<string, string>()
+  const pool: Record<string, unknown> = { ...next.nodes }
+  for (const oldId of Object.keys(fragment.nodes)) {
+    const newId = createId(CHILD_PREFIX, pool)
+    pool[newId] = true
+    idMap.set(oldId, newId)
+  }
+
+  for (const [oldId, node] of Object.entries(fragment.nodes)) {
+    const clone = deepClone(node)
+    if (clone.zones) {
+      for (const [zone, children] of Object.entries(clone.zones)) {
+        clone.zones[zone] = children.map((childId) => idMap.get(childId) ?? childId)
+      }
+    }
+    next.nodes[idMap.get(oldId) as string] = clone
+  }
+
+  const newRoot = idMap.get(fragment.root) as string
+  if (!parent.zones) parent.zones = {}
+  const children = parent.zones[target.zone] ?? (parent.zones[target.zone] = [])
+  const at = target.index === undefined ? children.length : clamp(target.index, 0, children.length)
+  children.splice(at, 0, newRoot)
+
+  return { doc: next, id: newRoot }
 }
 
 /** Set one prop on a node to a literal or binding value. */
