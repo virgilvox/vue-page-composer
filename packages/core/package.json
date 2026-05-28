@@ -1,0 +1,38 @@
+{
+  "name": "@page-composer/core",
+  "version": "0.1.0",
+  "description": "Framework-neutral document model, mutations, history, serialization, and resolver interface for Page Composer.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Moheeb Zara <hackbuildvideo@gmail.com>",
+  "homepage": "https://github.com/virgilvox/vue-page-composer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virgilvox/vue-page-composer.git",
+    "directory": "packages/core"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown src/index.ts --format esm --dts --clean",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "tsdown": "^0.22.1"
+  }
+}

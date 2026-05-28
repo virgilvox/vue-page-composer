@@ -1,0 +1,165 @@
+/**
+ * Document model and config types. Framework-neutral on purpose: nothing here
+ * imports Vue. The document format outlives any one renderer.
+ */
+
+/** A prop value bound to the host data layer, resolved at render time. */
+export interface Binding {
+  $bind: string
+}
+
+/** A named data source the host resolves into the render context. */
+export interface DataSourceRef {
+  $source: string
+}
+
+/** A plain JSON value. Object and array literals may nest bindings. */
+export type LiteralPrimitive = string | number | boolean | null
+export interface LiteralObject {
+  [key: string]: PropValue
+}
+export type LiteralArray = PropValue[]
+export type Literal = LiteralPrimitive | LiteralObject | LiteralArray
+
+/** A prop is either a literal value or a binding expression. */
+export type PropValue = Literal | Binding
+
+/** One placed component instance in the flat node map. */
+export interface PageNode {
+  /** Which registered component this node renders. */
+  type: string
+  /** Inputs to the component. Each value is a literal or a binding. */
+  props?: Record<string, PropValue>
+  /** Named, ordered lists of child node ids. */
+  zones?: Record<string, string[]>
+}
+
+/** The portable composition document. Flat map of nodes keyed by id. */
+export interface ComposedDocument {
+  version: '1'
+  /** Id of the root node, which holds the top-level zones. */
+  root: string
+  nodes: Record<string, PageNode>
+  /** Optional named data sources for the resolver. */
+  data?: Record<string, DataSourceRef>
+}
+
+/** Field types the inspector knows how to render. */
+export type FieldType =
+  | 'text'
+  | 'textarea'
+  | 'number'
+  | 'boolean'
+  | 'select'
+  | 'segment'
+  | 'color'
+  | 'object'
+  | 'array'
+
+export interface FieldCommon {
+  label?: string
+  /** Show a binding toggle so the value can read from host data. */
+  bindable?: boolean
+  description?: string
+}
+
+/** An option for select and segment fields. */
+export type FieldOption = string | { label: string; value: string | number }
+
+export interface TextField extends FieldCommon {
+  type: 'text'
+  default?: string
+  placeholder?: string
+}
+
+export interface TextareaField extends FieldCommon {
+  type: 'textarea'
+  default?: string
+  placeholder?: string
+  rows?: number
+}
+
+export interface NumberField extends FieldCommon {
+  type: 'number'
+  default?: number
+  unit?: string
+  min?: number
+  max?: number
+  step?: number
+}
+
+export interface BooleanField extends FieldCommon {
+  type: 'boolean'
+  default?: boolean
+}
+
+export interface SelectField extends FieldCommon {
+  type: 'select'
+  options: FieldOption[]
+  default?: string | number
+}
+
+export interface SegmentField extends FieldCommon {
+  type: 'segment'
+  options: FieldOption[]
+  default?: string | number
+}
+
+export interface ColorField extends FieldCommon {
+  type: 'color'
+  default?: string
+}
+
+export interface ObjectField extends FieldCommon {
+  type: 'object'
+  fields: Record<string, FieldDef>
+}
+
+export interface ArrayField extends FieldCommon {
+  type: 'array'
+  /** Field definition for each item in the list. */
+  of: FieldDef
+  default?: Literal[]
+}
+
+export type FieldDef =
+  | TextField
+  | TextareaField
+  | NumberField
+  | BooleanField
+  | SelectField
+  | SegmentField
+  | ColorField
+  | ObjectField
+  | ArrayField
+
+/**
+ * Registration for one placeable component. `TRender` is the host render
+ * reference (a Vue component in the Vue package). Core leaves it abstract so
+ * it carries no framework dependency.
+ */
+export interface ComponentConfig<TRender = unknown> {
+  label: string
+  render: TRender
+  category?: string
+  icon?: string
+  /** Names of droppable child areas this component exposes as slots. */
+  zones?: string[]
+  /** Per-zone allow-list of component types. Absent means any type. */
+  accepts?: Record<string, string[]>
+  fields?: Record<string, FieldDef>
+  defaultProps?: Record<string, PropValue>
+}
+
+export interface CategoryConfig {
+  title: string
+  order?: number
+}
+
+/** The contract between the host and Page Composer. */
+export interface Config<TRender = unknown> {
+  components: Record<string, ComponentConfig<TRender>>
+  categories?: Record<string, CategoryConfig>
+  /** Zones exposed by the document root. Defaults to a single `main` zone. */
+  rootZones?: string[]
+}
