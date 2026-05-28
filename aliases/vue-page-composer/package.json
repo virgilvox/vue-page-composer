@@ -1,6 +1,6 @@
 {
   "name": "vue-page-composer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Visual page editor and renderer for Vue. Register the components you already ship, compose pages on a canvas, and save a portable JSON document that renders on any route. Friendly alias for @page-composer/vue.",
   "type": "module",
   "license": "MIT",

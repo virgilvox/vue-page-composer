@@ -55,6 +55,34 @@ const resolver: Resolver = {
 
 The contract lives in `@page-composer/core`, framework-neutral, so the same document and resolver model could feed a renderer in another framework later.
 
-## Repeaters and collections (roadmap)
+## Repeaters and collections
 
-The binding model is built to drive list sections. A repeater binds a zone to a list source and clones its child subtree once per record, setting each clone's `scope` to the current item, so a bound `item.title` reads from that record. The resolver already supports a `scope`; the repeater field UI is on the roadmap. See [the comparison page](comparison.md) for where this sits relative to other tools.
+A repeater turns a static layout into a list-driven template. Mark a component as a repeater in the config:
+
+```ts
+Repeater: {
+  label: 'Repeater',
+  render: Repeater, // renders <slot name="item" />
+  zones: ['item'],
+  repeat: { zone: 'item', source: 'source' },
+  fields: { source: { type: 'text', label: 'Data source', bindable: true } },
+}
+```
+
+Place a template inside the repeater's `item` zone and bind its props to the current record with the `item.` prefix:
+
+```json
+{
+  "n_rep": {
+    "type": "Repeater",
+    "props": { "source": { "$bind": "features" } },
+    "zones": { "item": ["tpl"] }
+  },
+  "tpl": {
+    "type": "Card",
+    "props": { "title": { "$bind": "item.title" }, "body": { "$bind": "item.body" } }
+  }
+}
+```
+
+At render time the template is cloned once per record in `data.features`, with each clone's scope set to that record, so `item.title` resolves from it. In the editor the template renders once and stays editable. Bind `source` to your list, then switch to preview to see it repeat.

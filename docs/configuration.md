@@ -101,14 +101,66 @@ A swatch plus a hex input.
 accent: { type: 'color', label: 'Accent', default: '#e0a049' }
 ```
 
-### object and array
+### object
 
-Nested field groups and repeatable lists. These are defined in the model and on the roadmap for full inspector support.
+A group of nested fields, edited inline.
 
 ```ts
-cta: { type: 'object', fields: { label: { type: 'text' }, href: { type: 'text' } } }
-items: { type: 'array', of: { type: 'text' } }
+cta: { type: 'object', label: 'Call to action', fields: {
+  label: { type: 'text', label: 'Label' },
+  href: { type: 'text', label: 'Href' },
+} }
 ```
+
+### array
+
+A repeatable list. `of` is the field definition for each item, and may itself be an object or another array. The inspector renders add, remove, and reorder controls.
+
+```ts
+badges: { type: 'array', label: 'Badges', of: { type: 'text' } }
+links: { type: 'array', of: { type: 'object', fields: {
+  label: { type: 'text' }, href: { type: 'text' },
+} } }
+```
+
+### custom
+
+A field rendered by a component you register, for types the library does not ship. The `component` name keys into the `fieldComponents` map you pass to `PageComposer`.
+
+```ts
+// in the config
+icon: { type: 'custom', label: 'Icon', component: 'iconPicker' }
+```
+
+```vue
+<!-- register the component -->
+<PageComposer :config="config" :field-components="{ iconPicker: IconField }" v-model="doc" />
+```
+
+The custom component follows the `v-model` contract. It receives `modelValue` and the `field` definition, and emits `update:modelValue`:
+
+```vue
+<script setup lang="ts">
+defineProps<{ modelValue?: string; field?: unknown }>()
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
+</script>
+```
+
+## Repeater
+
+Mark a component as a repeater and it renders one zone as a per-item template:
+
+```ts
+Repeater: {
+  label: 'Repeater',
+  render: Repeater,
+  zones: ['item'],
+  repeat: { zone: 'item', source: 'source' },
+  fields: { source: { type: 'text', label: 'Data source', bindable: true } },
+}
+```
+
+At render time the children of the `item` zone are cloned once per record in the list resolved from the `source` prop, with each clone's data scope set to that record. In the editor the template renders once so it stays editable. See [data binding](data-binding.md) for the resolver details.
 
 ## Default props
 

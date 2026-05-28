@@ -81,7 +81,11 @@ Press `?` in the editor for the full list. Highlights: `Cmd/Ctrl Z` undo, `Cmd/C
 
 ## Field types
 
-`text`, `textarea`, `number`, `boolean`, `select`, `segment`, `color`, with `object` and `array` planned. Any field marked `bindable: true` gets the binding toggle.
+`text`, `textarea`, `number`, `boolean`, `select`, `segment`, `color`, nested `object` and `array` (with add, remove, and reorder), and `custom` for your own inspector components. Any scalar field marked `bindable: true` gets the binding toggle.
+
+## Repeaters
+
+Mark a component `repeat: { zone, source }` and it renders that zone's children as a per-item template, cloned once per record in the bound list. Static layout becomes a data-driven template. See [data binding](https://github.com/virgilvox/vue-page-composer/blob/main/docs/data-binding.md).
 
 ## Theming
 

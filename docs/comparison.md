@@ -32,13 +32,19 @@ Common complaints about existing builders shaped these decisions:
 - Builders that break component markup or output inline styles frustrate theme authors ([WP Tavern, on Gutenberg](https://wptavern.com/where-gutenberg-went-wrong-theme-developer-edition)). Page Composer never owns your component markup. It mounts your component and passes resolved props; styling stays yours, and the document is versioned data, not generated source.
 - GrapesJS forces you to assemble every manager yourself. Page Composer ships an opinionated, themeable editor out of the box.
 
+## What is built
+
+- Full field set: text, textarea, number, boolean, select, segment, color, plus nested object and array fields with add, remove, and reorder.
+- Repeater and collection binding: a component marked `repeat` clones a zone's template once per record in a bound list, with per-item scope.
+- A custom field plugin path: register your own inspector component for a `custom` field type through `field-components`.
+- Copy and paste of a whole subtree (across the document), duplicate, undo and redo, axis-aware drag and drop, an accessible outline, and keyboard shortcuts.
+
 ## Honest limitations
 
 - The canvas is not yet an isolated iframe, so width-based media queries respond to the editor window rather than a simulated viewport. The device frame previews layout width; true isolation is planned.
 - Drag and drop uses the native HTML5 API behind a thin layer. Keyboard reordering (`Cmd/Ctrl Shift ↑/↓`) and the outline cover the non-pointer path, but a full keyboard pick-up-and-move flow with auto-scroll parity is still on the list.
-- Repeater and collection binding are modeled in core and supported by the resolver, but the repeater field UI is not built yet.
-- The Nuxt module, the `@page-composer/dnd` and `@page-composer/fields` package extractions, and a plugin API for custom field types are roadmap items.
+- The Nuxt module and the `@page-composer/dnd` and `@page-composer/fields` package extractions are not built yet.
 
 ## Roadmap
 
-Near term: iframe canvas isolation, repeater and collection field UI, the Nuxt module (SSR, hydration, optional route loader). Later: a plugin API for custom field types and inspector overrides, multiplayer through a CRDT adapter, locale variants, and field/role permissions. The framework-neutral document format leaves room for renderers beyond Vue.
+Near term: iframe canvas isolation and the Nuxt module (SSR, hydration, optional route loader). Later: inspector section overrides, multiplayer through a CRDT adapter, locale variants, and field/role permissions. The framework-neutral document format leaves room for renderers beyond Vue.
