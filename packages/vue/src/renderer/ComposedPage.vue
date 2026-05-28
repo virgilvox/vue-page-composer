@@ -40,6 +40,6 @@ provide(renderContextKey, {
 
 <template>
   <div class="pc-page">
-    <NodeRenderer :id="model.root" />
+    <NodeRenderer v-if="model && model.nodes[model.root]" :id="model.root" />
   </div>
 </template>

@@ -11,15 +11,36 @@
  * vertical line in a row or grid, a filled highlight over an empty zone.
  */
 import { inject, ref } from 'vue'
-import { findParent, type DropTarget } from '@page-composer/core'
+import { findParent, zoneAccepts, type DropTarget } from '@page-composer/core'
 import { editorStoreKey } from './store.js'
 import ComposedPage from '../renderer/ComposedPage.vue'
 
-defineProps<{ viewport: 'desktop' | 'tablet' | 'mobile'; route?: string }>()
+defineProps<{
+  viewport: 'desktop' | 'tablet' | 'mobile'
+  route?: string
+  data?: Record<string, unknown>
+}>()
 
 const injected = inject(editorStoreKey)
 if (!injected) throw new Error('Canvas must be used inside PageComposer')
 const store = injected
+
+/** The type being dragged, from the palette or an existing node. */
+function draggedType(): string | null {
+  if (store.dragType.value) return store.dragType.value
+  const movingId = store.dragNodeId.value
+  if (movingId) return store.doc.value.nodes[movingId]?.type ?? null
+  return null
+}
+
+/** Whether the dragged type may drop into a zone, per the config allow-list. */
+function accepts(parentId: string, zone: string): boolean {
+  const type = draggedType()
+  if (!type) return true
+  const parentType = store.doc.value.nodes[parentId]?.type
+  if (!parentType) return true
+  return zoneAccepts(store.config, parentType, zone, type)
+}
 
 const stageEl = ref<HTMLElement | null>(null)
 
@@ -61,6 +82,7 @@ function placementFromEvent(event: DragEvent): Placement | null {
   // Empty zone: highlight the whole drop area rather than draw a line.
   const emptyZone = targetEl.closest<HTMLElement>('.pc-zone-empty')
   if (emptyZone?.dataset.pcParent && emptyZone.dataset.pcZone) {
+    if (!accepts(emptyZone.dataset.pcParent, emptyZone.dataset.pcZone)) return null
     const rect = emptyZone.getBoundingClientRect()
     return {
       target: { parentId: emptyZone.dataset.pcParent, zone: emptyZone.dataset.pcZone, index: 0 },
@@ -79,6 +101,7 @@ function placementFromEvent(event: DragEvent): Placement | null {
   if (nodeEl?.dataset.pcNodeId) {
     const location = findParent(store.doc.value, nodeEl.dataset.pcNodeId)
     if (location) {
+      if (!accepts(location.parentId, location.zone)) return null
       const rect = nodeEl.getBoundingClientRect()
       const horizontal = siblingsAreHorizontal(nodeEl)
       const after = horizontal
@@ -113,6 +136,7 @@ function placementFromEvent(event: DragEvent): Placement | null {
   // Over the open area of a root zone: append, line at the bottom edge.
   const rootZone = targetEl.closest<HTMLElement>('.pc-root-zone')
   if (rootZone?.dataset.pcParent && rootZone.dataset.pcZone) {
+    if (!accepts(rootZone.dataset.pcParent, rootZone.dataset.pcZone)) return null
     const rect = rootZone.getBoundingClientRect()
     return {
       target: { parentId: rootZone.dataset.pcParent, zone: rootZone.dataset.pcZone },
@@ -140,10 +164,12 @@ function autoScroll(event: DragEvent): void {
 
 function onDragOver(event: DragEvent): void {
   event.preventDefault()
+  const placement = placementFromEvent(event)
   if (event.dataTransfer) {
-    event.dataTransfer.dropEffect = store.dragNodeId.value ? 'move' : 'copy'
+    // A rejected drop (zone restriction or no target) shows the no-drop cursor.
+    event.dataTransfer.dropEffect = !placement ? 'none' : store.dragNodeId.value ? 'move' : 'copy'
   }
-  indicator.value = placementFromEvent(event)?.indicator ?? null
+  indicator.value = placement?.indicator ?? null
   autoScroll(event)
 }
 
@@ -195,7 +221,7 @@ function onCanvasClick(): void {
         <span class="pc-dot" style="background: #54bdb6" />
         <span class="pc-pill">yoursite.dev {{ route ?? '/' }}</span>
       </div>
-      <ComposedPage :config="store.config" :model="store.doc.value" />
+      <ComposedPage :config="store.config" :model="store.doc.value" :data="data" />
     </div>
 
     <div

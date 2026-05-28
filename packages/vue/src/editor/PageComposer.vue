@@ -25,8 +25,16 @@ const props = withDefaults(
     docName?: string
     /** Components for custom field types, keyed by the field's `component` name. */
     fieldComponents?: Record<string, Component>
+    /** Data context for resolving bound props on the canvas while authoring. */
+    data?: Record<string, unknown>
   }>(),
-  { route: '/', version: '0.1', docName: 'page.json', fieldComponents: () => ({}) },
+  {
+    route: '/',
+    version: '0.1',
+    docName: 'page.json',
+    fieldComponents: () => ({}),
+    data: () => ({}),
+  },
 )
 
 const emit = defineEmits<{
@@ -87,8 +95,16 @@ function isTextEntry(target: EventTarget | null): boolean {
 }
 
 function onKeydown(event: KeyboardEvent): void {
-  // Esc deselects even while a field is focused, after blurring the input.
+  // Esc closes an open overlay first, otherwise deselects (even from a field).
   if (event.key === 'Escape') {
+    if (showShortcuts.value) {
+      showShortcuts.value = false
+      return
+    }
+    if (showModel.value) {
+      showModel.value = false
+      return
+    }
     ;(event.target as HTMLElement | null)?.blur?.()
     editor.select(null)
     return
@@ -248,7 +264,7 @@ function onKeydown(event: KeyboardEvent): void {
         <Outline v-else />
       </aside>
 
-      <Canvas :viewport="viewport" :route="route" />
+      <Canvas :viewport="viewport" :route="route" :data="data" />
 
       <aside class="pc-panel pc-right">
         <Inspector />

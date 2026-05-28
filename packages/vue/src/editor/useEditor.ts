@@ -17,6 +17,7 @@ import {
   setBinding,
   clearBinding,
   findParent,
+  zoneAccepts,
   type ComposedDocument,
   type Config,
   type DropTarget,
@@ -146,8 +147,20 @@ export function useEditor(params: UseEditorParams): EditorApi {
     return { parentId: doc.value.root, zone: rootZone }
   }
 
+  function rootTarget(): DropTarget {
+    const rootNode = doc.value.nodes[doc.value.root]
+    const rootZone = rootNode?.zones ? (Object.keys(rootNode.zones)[0] ?? 'main') : 'main'
+    return { parentId: doc.value.root, zone: rootZone }
+  }
+
   function addBlock(type: string): string | null {
     const target = selectionTarget()
+    const parentType = doc.value.nodes[target.parentId]?.type
+    // If the selection's zone rejects this type, drop at the root instead.
+    if (parentType && !zoneAccepts(config, parentType, target.zone, type)) {
+      const root = rootTarget()
+      return insert(type, root.parentId, root.zone, root.index)
+    }
     return insert(type, target.parentId, target.zone, target.index)
   }
 

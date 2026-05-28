@@ -65,6 +65,15 @@ function scopeFor(item: unknown): Record<string, unknown> {
 
 const selected = computed(() => bridge?.selectedId.value === props.id)
 const hovered = computed(() => bridge?.hoveredId.value === props.id)
+
+function onNodeDragStart(event: DragEvent): void {
+  // Some browsers (Firefox) will not start a drag unless dataTransfer is set.
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', props.id)
+  }
+  bridge?.beginNodeDrag(props.id)
+}
 </script>
 
 <template>
@@ -114,7 +123,7 @@ const hovered = computed(() => bridge?.hoveredId.value === props.id)
     @keydown.space.stop.prevent="bridge.select(id)"
     @mouseover.stop="bridge.hover(id)"
     @mouseleave.stop="bridge.hover(null)"
-    @dragstart.stop="bridge.beginNodeDrag(id)"
+    @dragstart.stop="onNodeDragStart"
     @dragend.stop="bridge.endDrag()"
   >
     <div class="pc-tag-float">
