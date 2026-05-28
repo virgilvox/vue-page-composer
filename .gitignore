@@ -1,0 +1,10 @@
+node_modules/
+packages/*/dist/
+playground/dist/
+.nuxt/
+.output/
+*.tsbuildinfo
+.DS_Store
+coverage/
+*.log
+.turbo/
