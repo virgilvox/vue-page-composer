@@ -55,6 +55,7 @@ export type FieldType =
   | 'color'
   | 'object'
   | 'array'
+  | 'custom'
 
 export interface FieldCommon {
   label?: string
@@ -122,6 +123,18 @@ export interface ArrayField extends FieldCommon {
   default?: Literal[]
 }
 
+/**
+ * A field rendered by a host-registered component. The `component` name keys
+ * into the `fieldComponents` map passed to PageComposer. Extra config travels
+ * in `props`, which the custom component reads off the field definition.
+ */
+export interface CustomField extends FieldCommon {
+  type: 'custom'
+  component: string
+  default?: Literal
+  props?: Record<string, unknown>
+}
+
 export type FieldDef =
   | TextField
   | TextareaField
@@ -132,6 +145,7 @@ export type FieldDef =
   | ColorField
   | ObjectField
   | ArrayField
+  | CustomField
 
 /**
  * Registration for one placeable component. `TRender` is the host render
@@ -149,6 +163,20 @@ export interface ComponentConfig<TRender = unknown> {
   accepts?: Record<string, string[]>
   fields?: Record<string, FieldDef>
   defaultProps?: Record<string, PropValue>
+  /**
+   * Marks this component as a repeater. At render time the children of `zone`
+   * are treated as a template and rendered once per item in the list resolved
+   * from the `source` prop, with each clone's data scope set to that item. In
+   * the editor the template renders once so it stays editable.
+   */
+  repeat?: RepeatConfig
+}
+
+export interface RepeatConfig {
+  /** The zone whose children form the per-item template. */
+  zone: string
+  /** The prop key whose resolved value is the list to repeat over. */
+  source: string
 }
 
 export interface CategoryConfig {

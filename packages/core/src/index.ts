@@ -27,8 +27,10 @@ export type {
   ColorField,
   ObjectField,
   ArrayField,
+  CustomField,
   FieldDef,
   ComponentConfig,
+  RepeatConfig,
   CategoryConfig,
   Config,
 } from './types.js'
