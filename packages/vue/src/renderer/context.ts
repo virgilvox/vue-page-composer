@@ -24,6 +24,8 @@ export interface EditorBridge {
   readonly isEditor: true
   selectedId: Ref<string | null>
   hoveredId: Ref<string | null>
+  /** Node currently being dragged on the canvas, for dimming the source. */
+  dragNodeId: Ref<string | null>
   select: (id: string | null) => void
   hover: (id: string | null) => void
   /** Insert a child of the given type into a zone at an index. */

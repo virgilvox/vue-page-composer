@@ -197,5 +197,7 @@ const unit = computed(() => (props.field.type === 'number' ? props.field.unit : 
         {{ field.type }} field
       </div>
     </template>
+
+    <p v-if="field.description" class="pc-fhint">{{ field.description }}</p>
   </div>
 </template>

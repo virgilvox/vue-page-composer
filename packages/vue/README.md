@@ -2,15 +2,15 @@
 
 The Vue editor and renderer for [Page Composer](https://github.com/virgilvox/vue-page-composer). Register the components you already ship, compose pages on a canvas, and render the saved document on any route.
 
-The unscoped `vue-page-composer` package is the friendly alias for this one.
+The unscoped `vue-page-composer` package is the friendly alias for this one. Install whichever name you prefer; the API is identical.
+
+![The Page Composer editor: palette, live canvas, and auto-generated inspector](https://raw.githubusercontent.com/virgilvox/vue-page-composer/main/docs/assets/editor-inspector.png)
 
 ## Install
 
 ```bash
 pnpm add @page-composer/vue
 ```
-
-Import the stylesheet once in your app:
 
 ```ts
 import '@page-composer/vue/styles.css'
@@ -46,8 +46,8 @@ const config = definePageConfig({
 <script setup lang="ts">
 import { ref } from 'vue'
 import { PageComposer } from '@page-composer/vue'
-import { config } from './page-config'
 import type { ComposedDocument } from '@page-composer/vue'
+import { config } from './page-config'
 
 const doc = ref<ComposedDocument>(/* load from your store */)
 </script>
@@ -57,15 +57,29 @@ const doc = ref<ComposedDocument>(/* load from your store */)
 </template>
 ```
 
-`PageComposer` is a controlled component. It emits the document on every change and leaves persistence to you. Drafts, autosave, and history live in your app, not the library.
+`PageComposer` is a controlled component. It emits the document on every change and leaves persistence to you.
+
+![Outline tree and a block being dragged into a zone, with the drop target highlighted](https://raw.githubusercontent.com/virgilvox/vue-page-composer/main/docs/assets/editor-outline.png)
+
+## Editor features
+
+- Searchable palette grouped by category. Click to add or drag to the canvas.
+- Live canvas with selection, a drag handle, and an axis-aware drop indicator (a line between items in a stack, a vertical line in a grid, a filled highlight over an empty zone).
+- Auto-generated inspector with a per-field binding toggle.
+- Accessible outline tree (WAI-ARIA tree pattern, arrow-key navigation) synced with the canvas.
+- Undo and redo, copy and paste of a subtree, duplicate, keyboard reorder, viewport preview, and a portable JSON view. Press `?` for the shortcut list.
 
 ## Field types
 
-`text`, `textarea`, `number`, `boolean`, `select`, `segment`, `color`, with `object` and `array` planned. Any field marked `bindable: true` gets a toggle that switches the value between a literal and a `$bind` expression.
+`text`, `textarea`, `number`, `boolean`, `select`, `segment`, `color`. Mark a field `bindable: true` to expose the binding toggle.
 
 ## Theming
 
-Every value comes from a CSS token in one place. Components consume `var(--pc-*)`. Apply `pc-theme-light` next to the editor root to flip the chrome to a light palette by swapping token values, no component changes.
+One token file is the source of truth. Components consume `var(--pc-*)`. Add `pc-theme-light` next to the editor root to flip the chrome to light by swapping token values.
+
+## Documentation
+
+See the [docs folder](https://github.com/virgilvox/vue-page-composer/tree/main/docs): getting started, configuration, data binding, keyboard shortcuts, and a comparison with other tools.
 
 ## License
 

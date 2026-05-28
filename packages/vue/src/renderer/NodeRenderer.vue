@@ -83,16 +83,36 @@ const hovered = computed(() => bridge?.hoveredId.value === props.id)
   <div
     v-else-if="bridge"
     class="pc-cmp"
-    :class="{ 'pc-selected': selected, 'pc-hovered': hovered }"
+    :class="{
+      'pc-selected': selected,
+      'pc-hovered': hovered,
+      'pc-dragging': bridge.dragNodeId.value === id,
+    }"
     :data-pc-node-id="id"
+    role="button"
+    tabindex="0"
+    :aria-label="`${componentConfig.label} block`"
+    :aria-pressed="selected"
     draggable="true"
     @click.stop="bridge.select(id)"
+    @keydown.enter.stop.prevent="bridge.select(id)"
+    @keydown.space.stop.prevent="bridge.select(id)"
     @mouseover.stop="bridge.hover(id)"
     @mouseleave.stop="bridge.hover(null)"
     @dragstart.stop="bridge.beginNodeDrag(id)"
     @dragend.stop="bridge.endDrag()"
   >
     <div class="pc-tag-float">
+      <span class="pc-tag-grip" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <circle cx="9" cy="6" r="1.4" />
+          <circle cx="15" cy="6" r="1.4" />
+          <circle cx="9" cy="12" r="1.4" />
+          <circle cx="15" cy="12" r="1.4" />
+          <circle cx="9" cy="18" r="1.4" />
+          <circle cx="15" cy="18" r="1.4" />
+        </svg>
+      </span>
       <span class="pc-tag-name">{{ componentConfig.label }}</span>
       <button class="pc-tag-act" title="Duplicate" @click.stop="bridge.duplicate(id)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

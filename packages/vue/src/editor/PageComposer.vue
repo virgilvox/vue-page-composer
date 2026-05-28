@@ -51,6 +51,24 @@ provide(editorBridgeKey, editor.bridge)
 const viewport = ref<'desktop' | 'tablet' | 'mobile'>('desktop')
 const leftTab = ref<'blocks' | 'outline'>('blocks')
 const showModel = ref(false)
+const showShortcuts = ref(false)
+
+const isMac =
+  typeof navigator !== 'undefined' &&
+  /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent)
+const mod = isMac ? '⌘' : 'Ctrl'
+
+const shortcuts: { keys: string; label: string }[] = [
+  { keys: `${mod} Z`, label: 'Undo' },
+  { keys: `${mod} ⇧ Z`, label: 'Redo' },
+  { keys: `${mod} D`, label: 'Duplicate selection' },
+  { keys: `${mod} C`, label: 'Copy selection' },
+  { keys: `${mod} V`, label: 'Paste' },
+  { keys: `${mod} ⇧ ↑ / ↓`, label: 'Move selection up / down' },
+  { keys: '⌫', label: 'Delete selection' },
+  { keys: 'Esc', label: 'Deselect' },
+  { keys: '?', label: 'Toggle this help' },
+]
 
 const nodeCount = computed(() => Object.keys(doc.value.nodes).length)
 
@@ -62,18 +80,58 @@ function isTextEntry(target: EventTarget | null): boolean {
 }
 
 function onKeydown(event: KeyboardEvent): void {
+  // Esc deselects even while a field is focused, after blurring the input.
+  if (event.key === 'Escape') {
+    ;(event.target as HTMLElement | null)?.blur?.()
+    editor.select(null)
+    return
+  }
+  // Leave text entry to the browser: native undo, copy, paste, caret movement.
+  if (isTextEntry(event.target)) return
+
   const meta = event.metaKey || event.ctrlKey
-  if (meta && event.key.toLowerCase() === 'z') {
+  const key = event.key.toLowerCase()
+  const id = editor.selectedId.value
+
+  if (key === '?' || (event.shiftKey && key === '/')) {
+    event.preventDefault()
+    showShortcuts.value = !showShortcuts.value
+    return
+  }
+  if (meta && key === 'z') {
     event.preventDefault()
     if (event.shiftKey) editor.redo()
     else editor.undo()
     return
   }
-  if ((event.key === 'Backspace' || event.key === 'Delete') && !isTextEntry(event.target)) {
-    if (editor.selectedId.value) {
-      event.preventDefault()
-      editor.remove(editor.selectedId.value)
-    }
+  if (meta && key === 'd' && id) {
+    event.preventDefault()
+    editor.duplicate(id)
+    return
+  }
+  if (meta && key === 'c' && id) {
+    event.preventDefault()
+    editor.copy(id)
+    return
+  }
+  if (meta && key === 'v') {
+    event.preventDefault()
+    editor.paste()
+    return
+  }
+  if (id && (event.metaKey || event.ctrlKey) && event.shiftKey && key === 'arrowup') {
+    event.preventDefault()
+    editor.reorder(id, -1)
+    return
+  }
+  if (id && (event.metaKey || event.ctrlKey) && event.shiftKey && key === 'arrowdown') {
+    event.preventDefault()
+    editor.reorder(id, 1)
+    return
+  }
+  if ((event.key === 'Backspace' || event.key === 'Delete') && id) {
+    event.preventDefault()
+    editor.remove(id)
   }
 }
 </script>
@@ -147,6 +205,15 @@ function onKeydown(event: KeyboardEvent): void {
       <button class="pc-btn pc-solid" type="button" @click="emit('publish', doc)">
         <Icon name="check" /> Publish
       </button>
+      <button
+        class="pc-ico-btn"
+        type="button"
+        title="Keyboard shortcuts (?)"
+        aria-label="Keyboard shortcuts"
+        @click="showShortcuts = !showShortcuts"
+      >
+        <Icon name="help" />
+      </button>
     </header>
 
     <!-- body -->
@@ -183,6 +250,32 @@ function onKeydown(event: KeyboardEvent): void {
 
     <ModelOverlay :show="showModel" @close="showModel = false" />
 
+    <!-- keyboard shortcuts overlay -->
+    <div v-if="showShortcuts" class="pc-json-wrap" @click.self="showShortcuts = false">
+      <div class="pc-json-card pc-shortcuts-card" role="dialog" aria-label="Keyboard shortcuts">
+        <div class="pc-jh">
+          <div class="pc-jt">Keyboard shortcuts</div>
+          <button
+            class="pc-ico-btn"
+            type="button"
+            aria-label="Close"
+            @click="showShortcuts = false"
+          >
+            <Icon name="close" />
+          </button>
+        </div>
+        <ul class="pc-shortcuts">
+          <li v-for="s in shortcuts" :key="s.label">
+            <span class="pc-sc-label">{{ s.label }}</span>
+            <kbd class="pc-kbd">{{ s.keys }}</kbd>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- polite live region for screen readers -->
+    <div class="pc-sr-only" aria-live="polite" role="status">{{ editor.announcement.value }}</div>
+
     <!-- status -->
     <footer class="pc-status">
       <span class="pc-live"><i /> resolvers live</span>
@@ -191,6 +284,7 @@ function onKeydown(event: KeyboardEvent): void {
       >
       <span>{{ nodeCount }} nodes</span>
       <span class="pc-sp" />
+      <button class="pc-status-btn" type="button" @click="showShortcuts = true">shortcuts ?</button>
       <span>Vue 3.5</span>
       <span>{{ viewport }}</span>
     </footer>
