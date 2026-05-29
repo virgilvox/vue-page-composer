@@ -232,11 +232,16 @@ export function useEditor(params: UseEditorParams): EditorApi {
     commit(clearBinding(doc.value, id, key, value))
   }
 
+  function clearStaleSelection(next: ComposedDocument): void {
+    if (selectedId.value && !next.nodes[selectedId.value]) select(null)
+  }
+
   function undo(): void {
     const restored = history.undo()
     version.value += 1
     if (restored) {
       emit(restored)
+      clearStaleSelection(restored)
       announce('Undo')
     }
   }
@@ -246,6 +251,7 @@ export function useEditor(params: UseEditorParams): EditorApi {
     version.value += 1
     if (restored) {
       emit(restored)
+      clearStaleSelection(restored)
       announce('Redo')
     }
   }

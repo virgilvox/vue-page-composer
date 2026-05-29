@@ -11,8 +11,9 @@
  * vertical line in a row or grid, a filled highlight over an empty zone.
  */
 import { inject, ref } from 'vue'
-import { findParent, zoneAccepts, type DropTarget } from '@page-composer/core'
+import { findParent, isDescendant, zoneAccepts, type DropTarget } from '@page-composer/core'
 import { editorStoreKey } from './store.js'
+import { adjustForDetach } from './placement.js'
 import ComposedPage from '../renderer/ComposedPage.vue'
 
 defineProps<{
@@ -33,8 +34,13 @@ function draggedType(): string | null {
   return null
 }
 
-/** Whether the dragged type may drop into a zone, per the config allow-list. */
-function accepts(parentId: string, zone: string): boolean {
+/**
+ * Whether the current drag may drop into a zone. Rejects types a zone does not
+ * accept, and rejects moving a node into itself or its own descendants.
+ */
+function canDrop(parentId: string, zone: string): boolean {
+  const movingId = store.dragNodeId.value
+  if (movingId && isDescendant(store.doc.value, movingId, parentId)) return false
   const type = draggedType()
   if (!type) return true
   const parentType = store.doc.value.nodes[parentId]?.type
@@ -82,7 +88,7 @@ function placementFromEvent(event: DragEvent): Placement | null {
   // Empty zone: highlight the whole drop area rather than draw a line.
   const emptyZone = targetEl.closest<HTMLElement>('.pc-zone-empty')
   if (emptyZone?.dataset.pcParent && emptyZone.dataset.pcZone) {
-    if (!accepts(emptyZone.dataset.pcParent, emptyZone.dataset.pcZone)) return null
+    if (!canDrop(emptyZone.dataset.pcParent, emptyZone.dataset.pcZone)) return null
     const rect = emptyZone.getBoundingClientRect()
     return {
       target: { parentId: emptyZone.dataset.pcParent, zone: emptyZone.dataset.pcZone, index: 0 },
@@ -101,7 +107,7 @@ function placementFromEvent(event: DragEvent): Placement | null {
   if (nodeEl?.dataset.pcNodeId) {
     const location = findParent(store.doc.value, nodeEl.dataset.pcNodeId)
     if (location) {
-      if (!accepts(location.parentId, location.zone)) return null
+      if (!canDrop(location.parentId, location.zone)) return null
       const rect = nodeEl.getBoundingClientRect()
       const horizontal = siblingsAreHorizontal(nodeEl)
       const after = horizontal
@@ -136,7 +142,7 @@ function placementFromEvent(event: DragEvent): Placement | null {
   // Over the open area of a root zone: append, line at the bottom edge.
   const rootZone = targetEl.closest<HTMLElement>('.pc-root-zone')
   if (rootZone?.dataset.pcParent && rootZone.dataset.pcZone) {
-    if (!accepts(rootZone.dataset.pcParent, rootZone.dataset.pcZone)) return null
+    if (!canDrop(rootZone.dataset.pcParent, rootZone.dataset.pcZone)) return null
     const rect = rootZone.getBoundingClientRect()
     return {
       target: { parentId: rootZone.dataset.pcParent, zone: rootZone.dataset.pcZone },
@@ -179,9 +185,15 @@ function onDrop(event: DragEvent): void {
   const type = store.dragType.value
   const movingId = store.dragNodeId.value
   if (placement) {
-    const { parentId, zone, index } = placement.target
-    if (type) store.insert(type, parentId, zone, index)
-    else if (movingId && movingId !== parentId) store.move(movingId, parentId, zone, index)
+    if (type) {
+      const { parentId, zone, index } = placement.target
+      store.insert(type, parentId, zone, index)
+    } else if (movingId && movingId !== placement.target.parentId) {
+      // Correct the index for the gap left when the moved node detaches.
+      const from = findParent(store.doc.value, movingId)
+      const t = adjustForDetach(placement.target, from)
+      store.move(movingId, t.parentId, t.zone, t.index)
+    }
   }
   clearDrag()
 }

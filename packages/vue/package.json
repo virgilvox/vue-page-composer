@@ -1,6 +1,6 @@
 {
   "name": "@page-composer/vue",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Vue editor and renderer for Page Composer: PageComposer authoring surface and ComposedPage runtime.",
   "type": "module",
   "license": "MIT",

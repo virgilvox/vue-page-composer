@@ -104,6 +104,16 @@ describe('editor actions and shortcuts', () => {
     expect(wrapper.find('[role="status"]').text()).toContain('Added Hero')
   })
 
+  it('clears a stale selection after undo removes the selected node', async () => {
+    const wrapper = mountEditor()
+    await wrapper.find('[aria-label="Add Hero"]').trigger('click')
+    expect(wrapper.find('.pc-ih-name').exists()).toBe(true)
+    await key(wrapper, 'z', { metaKey: true })
+    // The added node is gone, so the inspector returns to its empty state.
+    expect(wrapper.find('h1.hero').exists()).toBe(false)
+    expect(wrapper.find('.pc-insp-empty').exists()).toBe(true)
+  })
+
   it('renders the outline as an accessible tree', async () => {
     const wrapper = mountEditor()
     await wrapper.find('[aria-label="Add Grid"]').trigger('click')

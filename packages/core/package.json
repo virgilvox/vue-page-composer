@@ -1,6 +1,6 @@
 {
   "name": "@page-composer/core",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Framework-neutral document model, mutations, history, serialization, and resolver interface for Page Composer.",
   "type": "module",
   "license": "MIT",
