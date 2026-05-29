@@ -17,12 +17,14 @@
     "build": "pnpm -r --filter \"./packages/**\" build",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
     "@vue/eslint-config-prettier": "^10.2.0",
     "eslint": "^10.4.0",
     "eslint-plugin-vue": "^10.9.1",

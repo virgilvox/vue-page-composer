@@ -8,3 +8,6 @@ playground/dist/
 coverage/
 *.log
 .turbo/
+playwright-report/
+test-results/
+.playwright/
