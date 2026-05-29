@@ -1,7 +1,7 @@
 {
-  "name": "nuxt-page-composer",
+  "name": "@page-composer/nuxt",
   "version": "0.1.0",
-  "description": "Nuxt module for Page Composer. Registers the ComposedPage renderer globally with SSR, injects the styles, and adds composables. Friendly alias for @page-composer/nuxt.",
+  "description": "Nuxt module for Page Composer. Registers the ComposedPage renderer globally with SSR, injects the styles, and adds composables.",
   "type": "module",
   "license": "MIT",
   "author": "Moheeb Zara <hackbuildvideo@gmail.com>",
@@ -9,10 +9,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/virgilvox/vue-page-composer.git",
-    "directory": "aliases/nuxt-page-composer"
-  },
-  "bugs": {
-    "url": "https://github.com/virgilvox/vue-page-composer/issues"
+    "directory": "packages/nuxt"
   },
   "keywords": [
     "nuxt",
@@ -20,27 +17,36 @@
     "vue",
     "page-builder",
     "page-composer",
-    "visual-editor",
-    "cms",
     "ssr"
   ],
   "exports": {
     ".": {
-      "types": "./dist/module.d.ts",
+      "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
     }
   },
   "main": "./dist/module.mjs",
-  "types": "./dist/module.d.ts",
+  "types": "./dist/types.d.mts",
   "files": [
     "dist",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "build": "nuxt-module-build build",
+    "prepack": "nuxt-module-build build",
+    "test": "vitest run"
+  },
   "dependencies": {
-    "@page-composer/nuxt": "workspace:^"
+    "@nuxt/kit": "^4.4.6",
+    "@page-composer/vue": "workspace:^"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "^1.0.2"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
   }
 }
