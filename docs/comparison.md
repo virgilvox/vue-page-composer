@@ -43,8 +43,8 @@ Common complaints about existing builders shaped these decisions:
 
 - The canvas is not yet an isolated iframe, so width-based media queries respond to the editor window rather than a simulated viewport. The device frame previews layout width; true isolation is planned.
 - Drag and drop uses the native HTML5 API behind a thin layer. Keyboard reordering (`Cmd/Ctrl Shift ↑/↓`) and the outline cover the non-pointer path, but a full keyboard pick-up-and-move flow with auto-scroll parity is still on the list.
-- The Nuxt module and the `@page-composer/dnd` and `@page-composer/fields` package extractions are not built yet.
+- The `@page-composer/dnd` and `@page-composer/fields` package extractions are not built yet.
 
 ## Roadmap
 
-Near term: iframe canvas isolation and the Nuxt module (SSR, hydration, optional route loader). Later: inspector section overrides, multiplayer through a CRDT adapter, locale variants, and field/role permissions. The framework-neutral document format leaves room for renderers beyond Vue.
+Near term: iframe canvas isolation. Later: inspector section overrides, multiplayer through a CRDT adapter, locale variants, and field/role permissions. The framework-neutral document format leaves room for renderers beyond Vue. The Nuxt module ships today (`nuxt-page-composer`); `ComposedPage` is SSR-tested.

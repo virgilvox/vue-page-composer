@@ -43,13 +43,15 @@ See [docs/getting-started.md](docs/getting-started.md) for the full walkthrough.
 | --------------------- | ---------------------------------------------------------------------------------------- |
 | `@page-composer/core` | Framework-neutral document model, mutations, history, serialization, resolver interface. |
 | `@page-composer/vue`  | The Vue editor and renderer.                                                             |
+| `@page-composer/nuxt` | The Nuxt module: global SSR renderer, styles, composables.                               |
 | `vue-page-composer`   | Friendly alias for `@page-composer/vue`.                                                 |
-| `nuxt-page-composer`  | The Nuxt module (in progress).                                                           |
+| `nuxt-page-composer`  | Friendly alias for `@page-composer/nuxt`.                                                |
 
 ## Documentation
 
 - [Getting started](docs/getting-started.md)
 - [Configuration and field types](docs/configuration.md)
+- [Nuxt module](docs/nuxt.md)
 - [Data binding](docs/data-binding.md)
 - [Keyboard shortcuts](docs/keyboard-shortcuts.md)
 - [How it compares](docs/comparison.md)
@@ -81,9 +83,9 @@ Layout:
 ```
 packages/core    @page-composer/core
 packages/vue     @page-composer/vue
+packages/nuxt    @page-composer/nuxt
 packages/dnd     @page-composer/dnd      (planned)
 packages/fields  @page-composer/fields   (planned)
-packages/nuxt    @page-composer/nuxt     (planned)
 aliases/*        vue-page-composer, nuxt-page-composer
 playground/      runnable demo app
 ```
