@@ -17,10 +17,11 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Build first so workspace packages resolve each other's type declarations.
+      - run: pnpm -r build
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm -r build
       - run: pnpm -r test
 
   e2e:
