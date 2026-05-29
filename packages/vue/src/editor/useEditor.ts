@@ -16,6 +16,7 @@ import {
   setProp,
   setBinding,
   clearBinding,
+  setWhen as coreSetWhen,
   findParent,
   zoneAccepts,
   type ComposedDocument,
@@ -57,6 +58,8 @@ export interface EditorApi {
   setField: (id: string, key: string, value: PropValue) => void
   bindField: (id: string, key: string, expression: string) => void
   unbindField: (id: string, key: string, value?: PropValue) => void
+  /** Set or clear a node's conditional visibility expression. */
+  setWhen: (id: string, when: string | undefined) => void
   copy: (id: string) => void
   paste: () => string | null
   canPaste: ComputedRef<boolean>
@@ -297,6 +300,10 @@ export function useEditor(params: UseEditorParams): EditorApi {
     commit(clearBinding(doc.value, id, key, value))
   }
 
+  function setWhen(id: string, when: string | undefined): void {
+    commit(coreSetWhen(doc.value, id, when || undefined))
+  }
+
   function clearStaleSelection(next: ComposedDocument): void {
     if (selectedId.value && !next.nodes[selectedId.value]) select(null)
   }
@@ -365,6 +372,7 @@ export function useEditor(params: UseEditorParams): EditorApi {
     setField,
     bindField,
     unbindField,
+    setWhen,
     copy,
     paste,
     canPaste,

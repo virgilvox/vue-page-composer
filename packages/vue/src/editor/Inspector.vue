@@ -5,8 +5,9 @@ import { editorStoreKey } from './store.js'
 import FieldRow from './FieldRow.vue'
 import { Icon } from './icons.js'
 
-const store = inject(editorStoreKey)
-if (!store) throw new Error('Inspector must be used inside PageComposer')
+const injected = inject(editorStoreKey)
+if (!injected) throw new Error('Inspector must be used inside PageComposer')
+const store = injected
 
 const selectedId = store.selectedId
 const node = computed(() =>
@@ -16,6 +17,11 @@ const componentConfig = computed(() =>
   node.value ? store.config.components[node.value.type] : undefined,
 )
 const fieldEntries = computed(() => Object.entries(componentConfig.value?.fields ?? {}))
+const whenExpr = computed(() => node.value?.when ?? '')
+
+function onWhenInput(event: Event): void {
+  if (selectedId.value) store.setWhen(selectedId.value, (event.target as HTMLInputElement).value)
+}
 </script>
 
 <template>
@@ -37,6 +43,16 @@ const fieldEntries = computed(() => Object.entries(componentConfig.value?.fields
       />
       <div v-if="fieldEntries.length === 0" class="pc-insp-empty">
         This component has no editable fields.
+      </div>
+
+      <div class="pc-visibility">
+        <div class="pc-flabel"><label>Visible when</label></div>
+        <input
+          class="pc-inp"
+          :value="whenExpr"
+          placeholder="always · e.g. user.isPro"
+          @input="onWhenInput"
+        />
       </div>
     </div>
   </template>

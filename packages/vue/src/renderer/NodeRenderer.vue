@@ -48,6 +48,19 @@ function childIds(zone: string): string[] {
   return node.value?.zones?.[zone] ?? []
 }
 
+// Conditional visibility. The `when` expression is resolved against the data
+// context; a falsy result hides the node in production. In the editor the node
+// still renders (so it can be edited) and is marked as conditionally hidden.
+const conditional = computed(() => Boolean(node.value?.when))
+const hidden = computed<boolean>(() => {
+  const when = node.value?.when
+  if (!when) return false
+  return !ctx.resolver.resolve(when, {
+    data: ctx.data.value,
+    ...(props.scope ? { scope: props.scope } : {}),
+  })
+})
+
 // Repeater support. In production the template zone is rendered once per item
 // in the resolved list; in the editor it renders once so it stays editable.
 const repeat = computed(() => componentConfig.value?.repeat)
@@ -112,6 +125,8 @@ function onNodeDragStart(event: DragEvent): void {
       'pc-hovered': hovered,
       'pc-dragging': bridge.dragNodeId.value === id,
       'pc-moving': bridge.movingId.value === id,
+      'pc-conditional': conditional,
+      'pc-cond-hidden': conditional && hidden,
     }"
     :data-pc-node-id="id"
     role="button"
@@ -139,6 +154,18 @@ function onNodeDragStart(event: DragEvent): void {
         </svg>
       </span>
       <span class="pc-tag-name">{{ componentConfig.label }}</span>
+      <span
+        v-if="conditional"
+        class="pc-tag-cond"
+        :title="hidden ? 'Hidden by condition' : 'Conditionally shown'"
+        aria-hidden="true"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+          <circle cx="12" cy="12" r="3" />
+          <path v-if="hidden" d="M3 3l18 18" />
+        </svg>
+      </span>
       <button class="pc-tag-act" title="Duplicate" @click.stop="bridge.duplicate(id)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="9" y="9" width="11" height="11" rx="2" />
@@ -171,8 +198,8 @@ function onNodeDragStart(event: DragEvent): void {
     </component>
   </div>
 
-  <!-- Production: bare host component, no wrapper. -->
-  <component :is="componentConfig.render" v-else v-bind="resolvedProps">
+  <!-- Production: bare host component, no wrapper. Hidden when its condition is falsy. -->
+  <component :is="componentConfig.render" v-else-if="!hidden" v-bind="resolvedProps">
     <template v-for="zone in zoneNames" :key="zone" #[zone]>
       <template v-if="repeat && zone === repeat.zone">
         <template v-for="(item, i) in repeatList" :key="i">

@@ -32,6 +32,12 @@ export interface PageNode {
   props?: Record<string, PropValue>
   /** Named, ordered lists of child node ids. */
   zones?: Record<string, string[]>
+  /**
+   * Conditional visibility. A resolver expression evaluated against the data
+   * context; the node and its subtree render only when it is truthy. In the
+   * editor the node always renders so it stays editable, marked as conditional.
+   */
+  when?: string
 }
 
 /** The portable composition document. Flat map of nodes keyed by id. */

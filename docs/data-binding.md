@@ -86,3 +86,15 @@ Place a template inside the repeater's `item` zone and bind its props to the cur
 ```
 
 At render time the template is cloned once per record in `data.features`, with each clone's scope set to that record, so `item.title` resolves from it. In the editor the template renders once and stays editable. Bind `source` to your list, then switch to preview to see it repeat.
+
+## Conditional visibility
+
+A node can carry a `when` expression. The node and its subtree render only when the resolver evaluates it truthy. Set it in the inspector's "Visible when" field, or in the document:
+
+```json
+{ "n_banner": { "type": "Banner", "when": "user.isPro" } }
+```
+
+It resolves like any expression, so it reads from the data context, and inside a repeater it reads from the item scope. A repeater template with `when: "item.featured"` renders only the featured records, which turns the repeater into a filtered list.
+
+In the editor a conditional node always renders so you can edit it, marked with an eye badge and dimmed when its condition is currently falsy. In production it is simply absent when hidden.

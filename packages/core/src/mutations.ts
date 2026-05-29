@@ -215,6 +215,20 @@ export function removeProp(doc: ComposedDocument, id: string, key: string): Comp
   return next
 }
 
+/** Set or clear a node's conditional visibility expression. */
+export function setWhen(
+  doc: ComposedDocument,
+  id: string,
+  when: string | undefined,
+): ComposedDocument {
+  const next = cloneDoc(doc)
+  const node = next.nodes[id]
+  if (!node) throw new Error(`setWhen: node "${id}" not found`)
+  if (when) node.when = when
+  else delete node.when
+  return next
+}
+
 /** Bind a prop to a data expression. */
 export function setBinding(
   doc: ComposedDocument,

@@ -1138,3 +1138,26 @@
   outline-offset: 1px;
   box-shadow: 0 0 0 4px var(--pc-accent-soft);
 }
+
+/* conditional visibility markers */
+.pc-cmp.pc-cond-hidden {
+  opacity: 0.45;
+}
+.pc-tag-cond {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: var(--pc-accent-ink);
+}
+.pc-tag-cond svg {
+  width: 11px;
+  height: 11px;
+}
+.pc-visibility {
+  padding: 11px 14px;
+  border-top: 1px solid var(--pc-line-2);
+}
+.pc-visibility .pc-flabel label {
+  color: var(--pc-data);
+}

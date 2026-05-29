@@ -65,6 +65,7 @@ export {
   removeProp,
   setBinding,
   clearBinding,
+  setWhen,
 } from './mutations.js'
 export type { DropTarget, NewNode, Subtree } from './mutations.js'
 

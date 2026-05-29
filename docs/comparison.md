@@ -40,6 +40,7 @@ Common complaints about existing builders shaped these decisions:
 - Copy and paste of a whole subtree (across the document), duplicate, undo and redo, axis-aware drag and drop, an accessible outline, and keyboard shortcuts.
 - Optional isolated canvas (`isolate` prop): the page renders in an iframe for true CSS isolation, and width-based media queries respond to the device width, not the editor window. Verified in a real browser.
 - Accessible keyboard move: pick a block up with `M`, step it through every valid position with the arrows, drop with Enter, cancel with Escape, with live-region announcements. Works in the iframe canvas too.
+- Conditional visibility: a node's `when` expression hides it (and its subtree) when falsy, resolved against the data context or the repeater item scope, so a repeated template can filter a list.
 - A Nuxt module with SSR (`nuxt-page-composer`), and `ComposedPage` is SSR-tested.
 
 ## Honest limitations
