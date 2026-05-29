@@ -98,6 +98,8 @@ function save(next: ComposedDocument) {
 
 The host owns persistence. Page Composer never talks to storage; it hands you the document and you decide what to do.
 
+Pass `:isolate="true"` to render the canvas in an iframe for true CSS isolation, so the host's component styles apply exactly as in production and width-based media queries respond to the device width rather than the editor window. In this mode, insertion is click-to-add and keyboard; the default inline canvas has full drag and drop.
+
 ## 3. Render the saved page
 
 On any route, load the document and render it with the same config:

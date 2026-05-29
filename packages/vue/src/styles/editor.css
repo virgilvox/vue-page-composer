@@ -1122,3 +1122,12 @@
   color: var(--pc-accent);
   background: var(--pc-accent-soft);
 }
+
+/* isolated (iframe) canvas */
+.pc-iframe {
+  display: block;
+  width: 100%;
+  min-height: 200px;
+  border: 0;
+  background: var(--pc-paper);
+}

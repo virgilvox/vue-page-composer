@@ -34,7 +34,7 @@ See [docs/getting-started.md](docs/getting-started.md) for the full walkthrough.
 - Portable JSON document, a flat node map you own and persist anywhere.
 - Visual data binding: any field can read from the host data layer through a `$bind` expression resolved at render time.
 - Repeaters that clone a zone's template per record in a bound list, nested object and array fields, and a custom field plugin path for your own inspector controls.
-- Polished editor: searchable palette, axis-aware drop indicator, accessible outline tree, undo and redo, copy and paste, duplicate, keyboard shortcuts, viewport preview.
+- Polished editor: searchable palette, axis-aware drop indicator, accessible outline tree, undo and redo, copy and paste, duplicate, keyboard shortcuts, viewport preview, and an optional iframe-isolated canvas with accurate media queries.
 - Controlled component. The host owns saving, drafts, and history.
 
 ## Packages

@@ -68,6 +68,7 @@ const doc = ref<ComposedDocument>(/* load from your store */)
 - Auto-generated inspector with a per-field binding toggle.
 - Accessible outline tree (WAI-ARIA tree pattern, arrow-key navigation) synced with the canvas.
 - Undo and redo, copy and paste of a subtree, duplicate, keyboard reorder, viewport preview, and a portable JSON view. Press `?` for the shortcut list.
+- Optional isolated canvas: pass `:isolate="true"` to render the page in an iframe for true CSS isolation, where width-based media queries respond to the device width rather than the editor window.
 
 ## Field types
 

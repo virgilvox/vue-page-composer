@@ -103,4 +103,14 @@ h1 {
   border-radius: 20px;
   padding: 3px 11px;
 }
+/* A real media query: it responds to the canvas width only when the canvas is
+   an isolated iframe, which is how you verify true viewport accuracy. */
+@media (max-width: 520px) {
+  .demo-hero {
+    padding: 32px 20px;
+  }
+  .demo-hero h1 {
+    font-size: 26px;
+  }
+}
 </style>

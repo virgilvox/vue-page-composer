@@ -15,11 +15,14 @@ import { findParent, isDescendant, zoneAccepts, type DropTarget } from '@page-co
 import { editorStoreKey } from './store.js'
 import { adjustForDetach } from './placement.js'
 import ComposedPage from '../renderer/ComposedPage.vue'
+import IframeCanvas from './IframeCanvas.vue'
 
 defineProps<{
   viewport: 'desktop' | 'tablet' | 'mobile'
   route?: string
   data?: Record<string, unknown>
+  /** Render the page in an iframe for true CSS isolation and viewport accuracy. */
+  isolate?: boolean
 }>()
 
 const injected = inject(editorStoreKey)
@@ -233,7 +236,8 @@ function onCanvasClick(): void {
         <span class="pc-dot" style="background: #54bdb6" />
         <span class="pc-pill">yoursite.dev {{ route ?? '/' }}</span>
       </div>
-      <ComposedPage :config="store.config" :model="store.doc.value" :data="data" />
+      <IframeCanvas v-if="isolate" :data="data" />
+      <ComposedPage v-else :config="store.config" :model="store.doc.value" :data="data" />
     </div>
 
     <div

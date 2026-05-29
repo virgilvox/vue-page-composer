@@ -27,6 +27,8 @@ const props = withDefaults(
     fieldComponents?: Record<string, Component>
     /** Data context for resolving bound props on the canvas while authoring. */
     data?: Record<string, unknown>
+    /** Render the canvas in an iframe for true CSS isolation and viewport accuracy. */
+    isolate?: boolean
   }>(),
   {
     route: '/',
@@ -34,6 +36,7 @@ const props = withDefaults(
     docName: 'page.json',
     fieldComponents: () => ({}),
     data: () => ({}),
+    isolate: false,
   },
 )
 
@@ -264,7 +267,7 @@ function onKeydown(event: KeyboardEvent): void {
         <Outline v-else />
       </aside>
 
-      <Canvas :viewport="viewport" :route="route" :data="data" />
+      <Canvas :viewport="viewport" :route="route" :data="data" :isolate="isolate" />
 
       <aside class="pc-panel pc-right">
         <Inspector />

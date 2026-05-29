@@ -11,6 +11,11 @@ const fieldComponents = { iconPicker: IconField }
 const doc = ref<ComposedDocument>(initialDoc)
 const mode = ref<'edit' | 'preview'>('edit')
 
+// Opt into the isolated (iframe) canvas with ?isolate=1 to try it out.
+const isolate = ref(
+  typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('isolate'),
+)
+
 function onPublish(next: ComposedDocument): void {
   // The host owns persistence. Here we just log the portable document.
   console.log('published document:\n', serialize(next, true))
@@ -25,8 +30,9 @@ function onPublish(next: ComposedDocument): void {
     :config="config"
     :field-components="fieldComponents"
     :data="sampleData"
+    :isolate="isolate"
     route="/"
-    version="0.4"
+    version="0.5"
     doc-name="home.page.json"
     @preview="mode = 'preview'"
     @publish="onPublish"

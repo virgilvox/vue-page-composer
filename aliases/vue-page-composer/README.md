@@ -72,6 +72,7 @@ const doc = ref<ComposedDocument>(/* load from your store */)
 - Auto-generated inspector: a form built from each component's field definitions, with a per-field toggle to switch a value between a literal and a data binding.
 - Outline tree that follows the WAI-ARIA tree pattern, kept in sync with canvas selection.
 - Undo and redo, copy and paste of a whole subtree, duplicate, viewport preview, and a live view of the portable JSON document.
+- Optional isolated canvas (`:isolate="true"`): renders the page in an iframe for true CSS isolation, where media queries respond to the device width rather than the editor window.
 
 ![Outline tree and a block being dragged into a zone, with the drop target highlighted](https://raw.githubusercontent.com/virgilvox/vue-page-composer/main/docs/assets/editor-outline.png)
 
