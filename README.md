@@ -67,11 +67,14 @@ pnpm --filter playground dev
 ## Develop
 
 ```bash
-pnpm -r test      # every package test suite
+pnpm -r test      # every package unit suite (Vitest)
+pnpm test:e2e     # end-to-end editor tests in a real browser (Playwright)
 pnpm -r build     # build every package
 pnpm lint         # eslint across the workspace
 pnpm format       # prettier write
 ```
+
+`ComposedPage` is verified to render server side (an SSR test renders it with `@vue/server-renderer`), and the editor has Playwright e2e covering load, selection, live prop editing, keyboard reorder, and repeater preview.
 
 Layout:
 
