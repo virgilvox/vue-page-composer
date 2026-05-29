@@ -26,9 +26,14 @@ Three layers, all green:
 
 Full gate: format, lint, typechecks, 101 unit tests (core 55, vue 42, nuxt 4), all builds.
 
-## Honest verification gap
+## Verification gap, then closed
 
-The module is verified at the compile, setup-logic, and renderer-SSR levels, but not yet run inside a full Nuxt application end to end (that needs a heavy Nuxt install and a fixture build). The module uses only canonical `@nuxt/kit` primitives over an SSR-verified renderer, so the residual risk is low. A Nuxt-app SSR e2e with `@nuxt/test-utils` is the recommended next verification step.
+Initially the module was verified at the compile, setup-logic, and renderer-SSR levels but not inside a full Nuxt app. That gap was then closed in the same session:
+
+- A `playground/` fixture loads the module. `nuxi prepare` runs its `setup` in real Nuxt; the generated manifests confirm `ComposedPage` and `PageComposer` are registered globally and `usePageComposer` is auto-imported.
+- A `@nuxt/test-utils` SSR e2e (`pnpm --filter @page-composer/nuxt test:e2e`) builds the playground, server-renders it, and asserts the resolved binding ("SSR works") and component markup appear in the returned HTML. Green.
+
+The e2e is opt-in (separate config) so it stays out of the fast unit gate. `nuxt` and `@nuxt/test-utils` are dev-only and not in the published package.
 
 ## Release
 
