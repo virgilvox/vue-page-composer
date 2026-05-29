@@ -10,9 +10,22 @@ Press `?` anywhere in the editor to open the shortcut list. Shortcuts are inert 
 | Copy selection           | `Cmd/Ctrl C`            |
 | Paste                    | `Cmd/Ctrl V`            |
 | Move selection up / down | `Cmd/Ctrl Shift ↑ / ↓`  |
+| Pick up to move          | `M`                     |
 | Delete selection         | `Delete` or `Backspace` |
 | Deselect                 | `Esc`                   |
 | Toggle this help         | `?`                     |
+
+## Moving a block without a mouse
+
+Press `M` on a selected block to pick it up. Then:
+
+| Action                                     | Key               |
+| ------------------------------------------ | ----------------- |
+| Step to the next / previous valid position | `↓` / `↑`         |
+| Drop it there                              | `Enter` / `Space` |
+| Cancel and restore                         | `Esc`             |
+
+The block follows along as you step through every position it is allowed to occupy, across zones and nesting levels, and each move is announced for screen readers. This works in the isolated (iframe) canvas too, where pointer drag is not yet available.
 
 Copy and paste operate on a whole subtree: copying a Grid copies its cards too, and pasting grafts a fresh copy with new ids.
 

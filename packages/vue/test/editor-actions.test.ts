@@ -104,6 +104,30 @@ describe('editor actions and shortcuts', () => {
     expect(wrapper.find('[role="status"]').text()).toContain('Added Hero')
   })
 
+  it('moves a node with keyboard pick-up (m, arrow, Enter)', async () => {
+    const wrapper = mountEditor()
+    await wrapper.find('[aria-label="Add Hero"]').trigger('click')
+    await wrapper.find('[aria-label="Add Hero"]').trigger('click')
+    const before = lastDoc(wrapper).nodes.page!.zones!.main!.slice()
+    await wrapper.findAll('.pc-cmp')[0]!.trigger('click')
+    await key(wrapper, 'm')
+    await key(wrapper, 'ArrowDown')
+    await key(wrapper, 'Enter')
+    expect(lastDoc(wrapper).nodes.page!.zones!.main).toEqual([before[1], before[0]])
+  })
+
+  it('cancels a keyboard move with Escape, restoring order', async () => {
+    const wrapper = mountEditor()
+    await wrapper.find('[aria-label="Add Hero"]').trigger('click')
+    await wrapper.find('[aria-label="Add Hero"]').trigger('click')
+    const before = lastDoc(wrapper).nodes.page!.zones!.main!.slice()
+    await wrapper.findAll('.pc-cmp')[0]!.trigger('click')
+    await key(wrapper, 'm')
+    await key(wrapper, 'ArrowDown')
+    await key(wrapper, 'Escape')
+    expect(lastDoc(wrapper).nodes.page!.zones!.main).toEqual(before)
+  })
+
   it('clears a stale selection after undo removes the selected node', async () => {
     const wrapper = mountEditor()
     await wrapper.find('[aria-label="Add Hero"]').trigger('click')

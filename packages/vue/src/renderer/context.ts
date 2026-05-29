@@ -26,6 +26,8 @@ export interface EditorBridge {
   hoveredId: Ref<string | null>
   /** Node currently being dragged on the canvas, for dimming the source. */
   dragNodeId: Ref<string | null>
+  /** Node currently in keyboard move mode, for highlighting it. */
+  movingId: Ref<string | null>
   select: (id: string | null) => void
   hover: (id: string | null) => void
   /** Insert a child of the given type into a zone at an index. */

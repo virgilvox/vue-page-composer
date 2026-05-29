@@ -1,6 +1,6 @@
 {
   "name": "@page-composer/nuxt",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Nuxt module for Page Composer. Registers the ComposedPage renderer globally with SSR, injects the styles, and adds composables.",
   "type": "module",
   "license": "MIT",

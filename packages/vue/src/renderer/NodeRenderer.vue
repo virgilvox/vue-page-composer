@@ -111,6 +111,7 @@ function onNodeDragStart(event: DragEvent): void {
       'pc-selected': selected,
       'pc-hovered': hovered,
       'pc-dragging': bridge.dragNodeId.value === id,
+      'pc-moving': bridge.movingId.value === id,
     }"
     :data-pc-node-id="id"
     role="button"

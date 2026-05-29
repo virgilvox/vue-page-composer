@@ -39,12 +39,13 @@ Common complaints about existing builders shaped these decisions:
 - A custom field plugin path: register your own inspector component for a `custom` field type through `field-components`.
 - Copy and paste of a whole subtree (across the document), duplicate, undo and redo, axis-aware drag and drop, an accessible outline, and keyboard shortcuts.
 - Optional isolated canvas (`isolate` prop): the page renders in an iframe for true CSS isolation, and width-based media queries respond to the device width, not the editor window. Verified in a real browser.
+- Accessible keyboard move: pick a block up with `M`, step it through every valid position with the arrows, drop with Enter, cancel with Escape, with live-region announcements. Works in the iframe canvas too.
 - A Nuxt module with SSR (`nuxt-page-composer`), and `ComposedPage` is SSR-tested.
 
 ## Honest limitations
 
 - In the isolated (iframe) canvas, insertion is click-to-add and keyboard; in-iframe drag and drop is a planned follow-up. The default inline canvas has full drag and drop.
-- Drag and drop uses the native HTML5 API behind a thin layer. Keyboard reordering (`Cmd/Ctrl Shift ↑/↓`) and the outline cover the non-pointer path, but a full keyboard pick-up-and-move flow with auto-scroll parity is still on the list.
+- Drag and drop uses the native HTML5 API behind a thin layer. A full keyboard pick-up-and-move flow (`M`, arrows, Enter) covers the non-pointer path across zones and nesting, with screen-reader announcements; pointer-drag auto-scroll parity in every mode is still being rounded out.
 - The `@page-composer/dnd` and `@page-composer/fields` package extractions are not built yet.
 
 ## Roadmap

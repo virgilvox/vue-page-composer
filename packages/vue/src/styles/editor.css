@@ -1131,3 +1131,10 @@
   border: 0;
   background: var(--pc-paper);
 }
+
+/* node picked up for keyboard move */
+.pc-cmp.pc-moving {
+  outline: 2px dashed var(--pc-accent);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 4px var(--pc-accent-soft);
+}

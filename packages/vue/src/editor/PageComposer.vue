@@ -83,6 +83,7 @@ const shortcuts: { keys: string; label: string }[] = [
   { keys: `${mod} C`, label: 'Copy selection' },
   { keys: `${mod} V`, label: 'Paste' },
   { keys: `${mod} ⇧ ↑ / ↓`, label: 'Move selection up / down' },
+  { keys: 'M', label: 'Pick up to move (arrows, Enter to drop, Esc to cancel)' },
   { keys: '⌫', label: 'Delete selection' },
   { keys: 'Esc', label: 'Deselect' },
   { keys: '?', label: 'Toggle this help' },
@@ -98,6 +99,24 @@ function isTextEntry(target: EventTarget | null): boolean {
 }
 
 function onKeydown(event: KeyboardEvent): void {
+  // Keyboard move mode captures arrows, Enter to drop, Escape to cancel.
+  if (editor.movingId.value) {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      editor.cancelMove()
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      editor.confirmMove()
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      editor.stepMove(1)
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      editor.stepMove(-1)
+    }
+    return
+  }
+
   // Esc closes an open overlay first, otherwise deselects (even from a field).
   if (event.key === 'Escape') {
     if (showShortcuts.value) {
@@ -122,6 +141,11 @@ function onKeydown(event: KeyboardEvent): void {
   if (key === '?' || (event.shiftKey && key === '/')) {
     event.preventDefault()
     showShortcuts.value = !showShortcuts.value
+    return
+  }
+  if (key === 'm' && !meta && id) {
+    event.preventDefault()
+    editor.beginMove(id)
     return
   }
   if (meta && key === 'z') {

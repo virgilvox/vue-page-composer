@@ -25,6 +25,7 @@ import {
   type Subtree,
 } from '@page-composer/core'
 import type { EditorBridge } from '../renderer/context.js'
+import { validSlots, currentSlotIndex } from './move.js'
 
 export interface UseEditorParams {
   config: Config<Component>
@@ -59,6 +60,16 @@ export interface EditorApi {
   copy: (id: string) => void
   paste: () => string | null
   canPaste: ComputedRef<boolean>
+  /** Node currently in keyboard move mode, or null. */
+  movingId: Ref<string | null>
+  /** Pick a node up for keyboard placement. */
+  beginMove: (id: string) => void
+  /** Step the picked-up node to the next (+1) or previous (-1) valid slot. */
+  stepMove: (delta: number) => void
+  /** Drop the picked-up node at its current slot, recording history. */
+  confirmMove: () => void
+  /** Abandon the move and restore the document. */
+  cancelMove: () => void
   undo: () => void
   redo: () => void
   /** Polite screen-reader announcement of the last action. */
@@ -73,6 +84,7 @@ export function useEditor(params: UseEditorParams): EditorApi {
   const hoveredId = ref<string | null>(null)
   const dragType = ref<string | null>(null)
   const dragNodeId = ref<string | null>(null)
+  const movingId = ref<string | null>(null)
   const clipboard = ref<Subtree | null>(null)
   const announcement = ref('')
   const version = ref(0)
@@ -205,6 +217,59 @@ export function useEditor(params: UseEditorParams): EditorApi {
     move(id, target.parentId, target.zone, target.index)
   }
 
+  // Keyboard "pick up and move". Slots are computed once from the document at
+  // pick-up; each step re-applies the move from that origin to the target slot
+  // and emits it without recording history, so undo sees one move on confirm.
+  let moveOrigin: ComposedDocument | null = null
+  let moveSlots: DropTarget[] = []
+  let moveIndex = 0
+
+  function beginMove(id: string): void {
+    moveOrigin = doc.value
+    moveSlots = validSlots(config, doc.value, id)
+    moveIndex = currentSlotIndex(doc.value, id, moveSlots)
+    movingId.value = id
+    announce(`Picked up ${labelOf(id)}. Arrow keys to move, Enter to drop, Escape to cancel.`)
+  }
+
+  function stepMove(delta: number): void {
+    const id = movingId.value
+    if (!id || !moveOrigin || moveSlots.length === 0) return
+    const next = Math.max(0, Math.min(moveSlots.length - 1, moveIndex + delta))
+    if (next === moveIndex) return
+    moveIndex = next
+    try {
+      emit(moveNode(moveOrigin, id, moveSlots[moveIndex] as DropTarget))
+      announce(`Position ${moveIndex + 1} of ${moveSlots.length}`)
+    } catch {
+      // Skip a slot that cannot accept the node.
+    }
+  }
+
+  function endMove(): void {
+    movingId.value = null
+    moveOrigin = null
+    moveSlots = []
+    moveIndex = 0
+  }
+
+  function confirmMove(): void {
+    const id = movingId.value
+    if (!id) return
+    if (moveOrigin && JSON.stringify(doc.value) !== JSON.stringify(moveOrigin)) {
+      history.push(doc.value)
+      version.value += 1
+    }
+    announce(`Dropped ${labelOf(id)}`)
+    endMove()
+  }
+
+  function cancelMove(): void {
+    if (moveOrigin) emit(moveOrigin)
+    announce('Move cancelled')
+    endMove()
+  }
+
   function duplicate(id: string): void {
     const result = duplicateNode(doc.value, id)
     commit(result.doc)
@@ -271,6 +336,7 @@ export function useEditor(params: UseEditorParams): EditorApi {
     selectedId,
     hoveredId,
     dragNodeId,
+    movingId,
     select,
     hover,
     requestInsert: insert,
@@ -302,6 +368,11 @@ export function useEditor(params: UseEditorParams): EditorApi {
     copy,
     paste,
     canPaste,
+    movingId,
+    beginMove,
+    stepMove,
+    confirmMove,
+    cancelMove,
     undo,
     redo,
     announcement,
