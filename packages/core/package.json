@@ -1,6 +1,6 @@
 {
   "name": "@page-composer/core",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Framework-neutral document model, mutations, history, serialization, and resolver interface for Page Composer.",
   "type": "module",
   "license": "MIT",
@@ -30,6 +30,7 @@
   },
   "scripts": {
     "build": "tsdown src/index.ts --format esm --dts --clean",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run"
   },
   "devDependencies": {

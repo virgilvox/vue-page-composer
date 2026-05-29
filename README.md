@@ -1,5 +1,9 @@
 # Page Composer
 
+[![CI](https://github.com/virgilvox/vue-page-composer/actions/workflows/ci.yml/badge.svg)](https://github.com/virgilvox/vue-page-composer/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/vue-page-composer)](https://www.npmjs.com/package/vue-page-composer)
+[![license](https://img.shields.io/npm/l/vue-page-composer)](LICENSE)
+
 A visual page editor you embed in your own Vue or Nuxt app. Register the components you already ship, drag them onto a canvas, and save a portable JSON document that renders on any route. MIT, no backend assumptions, no vendor lock-in.
 
 The closest reference point is Puck in the React world. Page Composer fills the same gap for Vue and Nuxt, and adds visual data binding on top.
@@ -56,6 +60,7 @@ See [docs/getting-started.md](docs/getting-started.md) for the full walkthrough.
 - [Keyboard shortcuts](docs/keyboard-shortcuts.md)
 - [How it compares](docs/comparison.md)
 - [Architecture](page-composer-architecture.md) and [build plan](page-composer-plan.md)
+- [Changelog](CHANGELOG.md)
 
 ## Try it
 
