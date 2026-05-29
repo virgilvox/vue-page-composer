@@ -1,6 +1,6 @@
 {
   "name": "@page-composer/vue",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Vue editor and renderer for Page Composer: PageComposer authoring surface and ComposedPage runtime.",
   "type": "module",
   "license": "MIT",
@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/server-renderer": "^3.5.35",
     "@vue/test-utils": "^2.4.10",
     "happy-dom": "^20.9.0",
     "vue": "^3.5.35",

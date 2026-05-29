@@ -37,6 +37,14 @@ function options(): { label: string; value: string | number }[] {
   )
 }
 
+// A select's DOM value is always a string; map it back to the option's own
+// value so numeric options keep their type in the document.
+function onSelect(event: Event): void {
+  const raw = (event.target as HTMLSelectElement).value
+  const match = options().find((option) => String(option.value) === raw)
+  update(match ? match.value : raw)
+}
+
 const unit = computed(() => (props.field.type === 'number' ? props.field.unit : undefined))
 
 function step(delta: number): void {
@@ -147,12 +155,7 @@ const customComponent = computed(() => {
     @click="update(!asBool())"
   />
 
-  <select
-    v-else-if="field.type === 'select'"
-    class="pc-sel"
-    :value="asString()"
-    @change="update(($event.target as HTMLSelectElement).value)"
-  >
+  <select v-else-if="field.type === 'select'" class="pc-sel" :value="asString()" @change="onSelect">
     <option v-for="opt in options()" :key="String(opt.value)" :value="opt.value">
       {{ opt.label }}
     </option>
