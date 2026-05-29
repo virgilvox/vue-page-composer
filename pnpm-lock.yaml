@@ -42,7 +42,11 @@ importers:
         specifier: ^10.2.0
         version: 10.4.0(eslint@10.4.0(jiti@2.7.0))
 
-  aliases/nuxt-page-composer: {}
+  aliases/nuxt-page-composer:
+    dependencies:
+      '@page-composer/nuxt':
+        specifier: workspace:^
+        version: link:../../packages/nuxt
 
   aliases/vue-page-composer:
     dependencies:
